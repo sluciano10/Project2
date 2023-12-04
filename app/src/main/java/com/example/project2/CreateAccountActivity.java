@@ -15,7 +15,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText userPassword;
     private EditText confirmPassword;
 
-    //TODO: ROOM DATABASE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,13 +38,19 @@ public class CreateAccountActivity extends AppCompatActivity {
             return;
         }
 
-        if (!username.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()){
-            Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-            goToLoginActivity(new View(this));
+        if (username.isEmpty() && password.isEmpty() && confirmPassword.isEmpty()){
+            Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+            return;
         }
-        else{
-            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-        }
+
+        User newUser = new User();
+        newUser.setUserName(username);
+        newUser.setPassword(password);
+
+        Project.database.userDao().insertUser(newUser);
+
+        Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
+        goToLoginActivity(new View(this));
     }
         public void goToLoginActivity(View view) {
             Intent intent = new Intent(this, LoginActivity.class);
